@@ -1,0 +1,37 @@
+
+/* TYPOGRAPHY */
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1.2rem;
+  font-family: "Roboto", sans-serif;
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+.today-forecast__city,
+.today-forecast__deg {
+  font-weight: 300;
+}
+
+.today-forecast__city {
+  font-size: 3rem;
+}
+
+.today-forecast__deg {
+  font-size: 5rem;
+}
+
+.width-8rem {
+  width: 8rem;
+}
+
+/* ICON */
+.icon{
+    width: 1.3rem;
+    height: 1.3rem;
+}
+
+/* DAILY FORECAST */
