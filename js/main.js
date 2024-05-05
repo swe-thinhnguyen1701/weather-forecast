@@ -4,22 +4,32 @@ let lon = "",
   lat = "";
 
 $.ajax({
-  url: `http://api.openweathermap.org/geo/1.0/direct?q=Milwaukee&limit=5&appid=${myAPI}`,
+  url: `http://api.openweathermap.org/geo/1.0/direct?q=santa-clara&limit=5&appid=${myAPI}`,
   method: "GET",
 }).then(function (res) {
   console.log(res);
 
-  console.log(res[0].lat);
-  console.log(res[0].lon);
-  getData(res[0].lat, res[0].lon)
+  lat = res[0].lat;
+  lon = res[0].lon;
+  getWeatherNextFiveDays(lat, lon);
+  getWeatherToday(lat, lon);
 });
 
 
-const getData = function(lat, lon){
+const getWeatherNextFiveDays = function(lat, lon){
     $.ajax({
         url: `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${myAPI}`,
         method:"GET"
     }).then(function(res) {
         console.log(res);
     });
+}
+
+const getWeatherToday = function (lat, lon){
+  $.ajax({
+    url:`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${myAPI}`,
+    method: "GET"
+  }).then(function (res) {
+    console.log(res);
+  });
 }
