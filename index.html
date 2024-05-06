@@ -14,8 +14,8 @@
     <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
-    <header class="d-flex-row justify-content-end mb-5">
-      <nav class="menu-toggle">
+    <header class="mb-5">
+      <nav class="d-flex-row justify-content-end menu-toggle">
         <button
           class="btn"
           type="button"
@@ -31,26 +31,123 @@
         </button>
 
         <div
-          class="offcanvas offcanvas-end"
+          class="offcanvas offcanvas-end text-bg-dark"
           tabindex="-1"
           id="offcanvasRight"
           aria-labelledby="offcanvasRightLabel"
         >
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasRightLabel">
-              Offcanvas right
-            </h5>
+          <div class="offcanvas-header align-items-center">
+            <h4 class="offcanvas-title ms-4" id="offcanvasRightLabel">
+              Weather
+            </h4>
             <button
               type="button"
-              class="btn-close"
+              class="btn-close btn-close-white"
               data-bs-dismiss="offcanvas"
               aria-label="Close"
             ></button>
           </div>
-          <div class="offcanvas-body">...</div>
+
+          <div class="offcanvas-body">
+            <div class="mb-3 d-flex-row">
+              <input
+                type="text"
+                class="form-control"
+                id="search-city"
+                placeholder="Enter a city name"
+              />
+              <button type="button" class="btn btn-outline-light ms-4">
+                Add
+              </button>
+            </div>
+            <ul class="list">
+              <li class="list-item">
+                <div class="card">
+                  <label for="milwaukee">
+                    <div
+                      class="d-flex-row justify-content-between align-items-center mb-2"
+                    >
+                      <div>
+                        <h3 class="card__city fw-bold">Milwaukee</h3>
+                        <p class="fw-bold">10:20</p>
+                      </div>
+                      <h2 class="card__current-temp">10&deg;</h2>
+                    </div>
+                    <div
+                      class="d-flex-row justify-content-between align-items-end fw-bold"
+                    >
+                      <p>status</p>
+                      <div
+                        class="d-flex-row justify-content-between card__weather-min-max"
+                      >
+                        <p>H:36&deg;</p>
+                        <p>L:10&deg;</p>
+                      </div>
+                    </div>
+                  </label>
+                  <input
+                    type="radio"
+                    name="milwaukee"
+                    id="milwaukee"
+                    class="hidden-radio"
+                  />
+                </div>
+              </li>
+            </ul>
+          </div>
         </div>
       </nav>
+      <div class="menu p-3">
+        <img src="./images/setting-icon.png" alt="" class="icon icon--medium mb-4">
+        <h4>WEATHER</h4>
+        <div class="mt-4 mb-4 d-flex-row">
+          <input
+            type="text"
+            class="form-control"
+            id="search-city"
+            placeholder="Enter a city name"
+          />
+          <button type="button" class="btn btn-outline-light ms-4">
+            Add
+          </button>
+        </div>
+        <ul class="list">
+          <li class="list-item">
+            <div class="card">
+              <label for="milwaukee">
+                <div
+                  class="d-flex-row justify-content-between align-items-center mb-2"
+                >
+                  <div>
+                    <h3 class="card__city fw-bold">Milwaukee</h3>
+                    <p class="fw-bold">10:20</p>
+                  </div>
+                  <h2 class="card__current-temp">10&deg;</h2>
+                </div>
+                <div
+                  class="d-flex-row justify-content-between align-items-end fw-bold"
+                >
+                  <p>status</p>
+                  <div
+                    class="d-flex-row justify-content-between card__weather-min-max"
+                  >
+                    <p>H:36&deg;</p>
+                    <p>L:10&deg;</p>
+                  </div>
+                </div>
+              </label>
+              <input
+                type="radio"
+                name="milwaukee"
+                id="milwaukee"
+                class="hidden-radio"
+              />
+            </div>
+          </li>
+        </ul>
+      </div>
     </header>
+
 
     <main class="mb-5">
       <section class="d-flex-col align-items-center mb-5">
@@ -143,7 +240,7 @@
         </div>
       </section>
       <section class="section five-days-forecast">
-        <ul class="list list--col">
+        <ul class="list list--col widget">
           <li class="list-item">
             <div
               class="d-flex-row align-items-center justify-content-between five-days-forecast__heading"
@@ -190,6 +287,6 @@
       integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
       crossorigin="anonymous"
     ></script>
-    <!-- <script src="./js/main.js"></script> -->
+    <script src="./js/main.js"></script>
   </body>
 </html>

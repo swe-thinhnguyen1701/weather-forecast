@@ -1,0 +1,82 @@
+<nav class="menu-toggle">
+    <button
+      class="btn"
+      type="button"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#offcanvasRight"
+      aria-controls="offcanvasRight"
+    >
+      <img
+        src="./images/menu-icon.png"
+        class="icon icon--medium"
+        alt="menu icon"
+      />
+    </button>
+
+    <div
+      class="offcanvas offcanvas-end text-bg-dark"
+      tabindex="-1"
+      id="offcanvasRight"
+      aria-labelledby="offcanvasRightLabel"
+    >
+      <div class="offcanvas-header align-items-center">
+        <h4 class="offcanvas-title ms-4" id="offcanvasRightLabel">
+          Weather
+        </h4>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <div class="offcanvas-body">
+        <div class="mb-3 d-flex-row">
+          <input
+            type="text"
+            class="form-control"
+            id="search-city"
+            placeholder="Enter a city name"
+          />
+          <button type="button" class="btn btn-outline-light ms-4">
+            Add
+          </button>
+        </div>
+        <ul class="list">
+          <li class="list-item">
+            <div class="card">
+              <label for="milwaukee">
+                <div
+                  class="d-flex-row justify-content-between align-items-center mb-2"
+                >
+                  <div>
+                    <h3 class="card__city fw-bold">Milwaukee</h3>
+                    <p class="fw-bold">10:20</p>
+                  </div>
+                  <h2 class="card__current-temp">10&deg;</h2>
+                </div>
+                <div
+                  class="d-flex-row justify-content-between align-items-end fw-bold"
+                >
+                  <p>status</p>
+                  <div
+                    class="d-flex-row justify-content-between card__weather-min-max"
+                  >
+                    <p>H:36&deg;</p>
+                    <p>L:10&deg;</p>
+                  </div>
+                </div>
+              </label>
+              <input
+                type="radio"
+                name="milwaukee"
+                id="milwaukee"
+                class="hidden-radio"
+              />
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>

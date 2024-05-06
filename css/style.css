@@ -16,12 +16,14 @@
 
 /* remove later */
 body{
-  padding: 1rem;
+  /* padding: 1rem; */
   background-image: url("../images/night-bg-phone.jpeg");
   background-size: cover;
   background-repeat: no-repeat;
   color: white;
-  opacity: 0.8;
+  max-width: 1300px;
+  margin: 0 auto;
+  /* opacity: 0.8; */
 }
 
 /* TYPOGRAPHY */
@@ -204,6 +206,15 @@ h4{
 .card{
   background-color: var(--bg-light);
   color: white;
+  border-radius: 20px;
+  padding: 10px;
+  padding-top: 0;
+  background-image: url("../images/sunny-bg.jpeg");
+  background-size: cover;
+}
+
+.card label:hover{
+  cursor: pointer;
 }
 
 .card__current-temp{
@@ -302,5 +313,48 @@ h4{
 
   .five-days-forecast__heading{
     width: 155px;
+  }
+}
+
+/* HEADER */
+.offcanvas-title{
+  font-weight: bold;
+
+}
+
+.menu{
+  display: none;
+}
+
+@media screen and (min-width: 1024px){
+  .menu-toggle{
+    display: none;
+  }
+
+  header{
+    position: fixed;
+    margin: 0;
+  }
+
+  .menu{
+    background-color: var(--bg-dark);
+    opacity: 0.8;
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    height: 100vh;
+  }
+
+  .menu:hover{
+    opacity: 1;
+  }
+
+  .menu .icon{
+    align-self: flex-end;
+  }
+
+  main{
+    margin-left: 330px;
+    margin-right: 20px;
   }
 }

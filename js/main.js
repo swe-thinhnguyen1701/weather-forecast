@@ -15,21 +15,20 @@ $.ajax({
   getWeatherToday(lat, lon);
 });
 
-
-const getWeatherNextFiveDays = function(lat, lon){
-    $.ajax({
-        url: `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${myAPI}`,
-        method:"GET"
-    }).then(function(res) {
-        console.log(res);
-    });
-}
-
-const getWeatherToday = function (lat, lon){
+const getWeatherNextFiveDays = function (lat, lon) {
   $.ajax({
-    url:`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${myAPI}`,
-    method: "GET"
+    url: `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${myAPI}`,
+    method: "GET",
   }).then(function (res) {
     console.log(res);
   });
-}
+};
+
+const getWeatherToday = function (lat, lon) {
+  $.ajax({
+    url: `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${myAPI}`,
+    method: "GET",
+  }).then(function (res) {
+    console.log(res);
+  });
+};
