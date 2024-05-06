@@ -17,7 +17,7 @@
 /* remove later */
 body{
   padding: 1rem;
-  background-image: url("../images/sunny-bg.jpeg");
+  background-image: url("../images/night-bg-phone.jpeg");
   background-size: cover;
   background-repeat: no-repeat;
   color: white;
@@ -101,13 +101,14 @@ h4{
   width: 135px;
 }
 
-/* CONTAINER */
-.container{
+/* SECTION */
+.section{
   padding: 1rem 1.5rem;
   /* remove this line below after done*/
   /* border: 1px solid black;  */
   border-radius: 1.5rem;
-  background: linear-gradient(90deg, #307cc8 0%, #94cff1 100%);
+  /* background: linear-gradient(90deg, #307cc8 0%, #94cff1 100%); */
+  background-color: var(--bg-dark);
   color: white;
 }
 
@@ -187,6 +188,10 @@ h4{
   justify-content: space-between;
 }
 
+.justify-content-end{
+  justify-content: end;
+}
+
 .align-items-end{
   align-items: end;
 }
@@ -227,6 +232,11 @@ h4{
 .icon--small{
   width: 15px;
   height: 15px;
+}
+
+.icon--medium{
+  width: 20px;
+  height: 20px;
 }
 
 /* HOURLY FORECAST */
