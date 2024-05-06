@@ -1,6 +1,6 @@
 :root{
-  --bg-light: #29C5F6;
-  --bg-dark: #3e3e42;
+  --bg-light: #5ac0fe;
+  --bg-dark: #57595b;
 }
 
 *{
@@ -33,7 +33,7 @@ h2, h3, h4{
 }
 
 h2{
-  font-size: 3rem;
+  font-size: 7rem;
 }
 
 h3{
@@ -52,10 +52,6 @@ h4{
   body{
     font-size: 1.28rem;
   }
-  
-  h2{
-    font-size: 4rem;
-  }
 
   h3{
     font-size: 2.8rem;
@@ -68,11 +64,11 @@ h4{
 
 @media screen and (min-width: 1024px){
   body{
-    font-size: 1.32rem;
+    font-size: 1.42rem;
   }
 
   h2{
-    font-size: 5rem;
+    font-size: 9rem;
   }
 
   h3{
@@ -84,18 +80,30 @@ h4{
   }
 }
 
+/* SIZING */
+.w-1{
+  width: 7rem;
+}
+
+.w-2{
+  width: 135px;
+}
+
 /* CONTAINER */
 .container{
   padding: 1rem 1.5rem;
   /* remove this line below after done*/
-  border: 1px solid black; 
+  /* border: 1px solid black;  */
   border-radius: 1.5rem;
+  background-color: var(--bg-dark);
+  color: white;
 }
 
 /* LIST */
 .list{
   padding: 0;
   margin: 0;
+  /* overflow: hidden; */
 }
 
 .list--row{
@@ -136,10 +144,31 @@ h4{
   margin-bottom: 2rem;
 }
 
+.mb-5{
+  margin-bottom: 5rem;
+}
+
+.mt-2{
+  margin-top: 2rem;
+}
+
+.ml-2{
+  margin-left: 2rem;
+}
+
+.mr-2{
+  margin-right: 2rem;
+}
+
 /* DISPLAY */
 .d-flex-row{
   display: flex;
   flex-direction: row;
+}
+
+.d-flex-col{
+  display: flex;
+  flex-direction: column;
 }
 
 .justify-content-between{
@@ -170,4 +199,42 @@ h4{
 
 .card__weather-min-max{
   width: 7rem;
+}
+
+/* CURRENT TEMP */
+.current-temp{
+  
+}
+
+/* ICON */
+.icon{
+  width: 35px;
+  height: 35px;
+}
+
+.icon--small{
+  width: 15px;
+  height: 15px;
+}
+
+/* HOURLY FORECAST */
+.hourly-forecast{
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+
+.hourly-forecast::-webkit-scrollbar{
+  display: none;
+}
+
+.hourly-forecast .list-item{
+  flex-shrink: 0;
+}
+
+.hourly-forecast__time, .hourly-forecast__temp{
+  font-weight: bold;
+}
+
+.hourly-forecast__temp{
+  font-size: 1.7rem;
 }
