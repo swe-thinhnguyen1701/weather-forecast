@@ -1,6 +1,13 @@
 :root{
-  --bg-light: #5ac0fe;
+  --bg-light: #38a4e4;
   --bg-dark: #57595b;
+  --heading-color: #d6d6d6;
+  --temp-color-freeze: #4397df;   /* 0 deg */
+  --temp-color-cold: #69e2d2;     /* 10 deg */
+  --temp-color-neutral: #f8d648;  /* 20 deg */
+  --temp-color-warm: #ed732e;     /* 30 deg */
+  --temp-color-hot: #cf2d1f;      /* 40 deg */
+  --container-sunny-bg: linear-gradient(90deg, #307cc8 0%, #94cff1 100%);
 }
 
 *{
@@ -10,6 +17,11 @@
 /* remove later */
 body{
   padding: 1rem;
+  background-image: url("../images/sunny-bg.jpeg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: white;
+  opacity: 0.8;
 }
 
 /* TYPOGRAPHY */
@@ -18,7 +30,7 @@ html {
 }
 
 body {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-family: "Roboto", sans-serif;
   line-height: 1.2;
   font-weight: 500;
@@ -95,7 +107,7 @@ h4{
   /* remove this line below after done*/
   /* border: 1px solid black;  */
   border-radius: 1.5rem;
-  background-color: var(--bg-dark);
+  background: linear-gradient(90deg, #307cc8 0%, #94cff1 100%);
   color: white;
 }
 
@@ -237,4 +249,48 @@ h4{
 
 .hourly-forecast__temp{
   font-size: 1.7rem;
+}
+
+/* 5-DAYS FORECAST */
+.five-days-forecast{
+  width: 100%;
+}
+
+.five-days-forecast__heading{
+  color: var(--heading-color);
+  font-size: 1.2rem;
+  width: 135px;
+}
+
+.five-days-forecast__temp-bar{
+  background: linear-gradient(90deg, var(--temp-color-freeze) 0%, var(--temp-color-neutral) 100%);
+  border-radius: 10px;
+  margin: 0 5px;
+  width: 70px;
+  height: 10px;
+}
+
+@media screen and (min-width: 768px){
+  .five-days-forecast{
+    width: 50%;
+  }
+
+  .five-days-forecast__heading{
+    width: 145px;
+  }
+
+  .five-days-forecast__temp-bar{
+    width: 90px;
+    margin: 0 10px;
+  }
+}
+
+@media screen and (min-width: 1024px){
+  /* .five-days-forecast{
+    width: 35%;
+  } */
+
+  .five-days-forecast__heading{
+    width: 155px;
+  }
 }
