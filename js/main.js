@@ -22,7 +22,7 @@ $.ajax({
     }
   }
   // console.log(usCountries);
-  // getWeatherNextFiveDays(lat, lon, res[0]);
+  getWeatherNextFiveDays(lat, lon, res[0]);
   getWeatherToday(lat, lon, res[0]);
   getWeatherInNextThreeHours();
   findNextFiveDays();
@@ -58,8 +58,8 @@ const getWeatherToday = function (lat, lon, city) {
     // const currentTempMin = $("#current-location__min");
     const tempMin = $("<p>");
 
-    tempMax.html(`${Math.ceil(res.main.temp_max)}&deg;`);
-    tempMin.html(`${Math.ceil(res.main.temp_min)}&deg;`);
+    tempMax.html(`H:${Math.ceil(res.main.temp_max)}&deg;`);
+    tempMin.html(`L:${Math.ceil(res.main.temp_min)}&deg;`);
     tempMinMaxContainer.addClass("d-flex-row w-1 justify-content-between");
     tempMinMaxContainer.append(tempMax);
     tempMinMaxContainer.append(tempMin);
