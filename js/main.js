@@ -133,10 +133,10 @@ const changeBackground = function () {
   // console.log(currentTime.get("hour"));
   if (currentTime > 6 && currentTime < 18) {
     // console.log("run");
-    body.css("background-image", `url("../images/sunny-bg.jpeg")`);
+    body.css("background-image", `url("./images/sunny-bg.jpeg")`);
     section.css("background-color", "var(--bg-light)");
   } else {
-    body.css("background-image", `url("../images/night-bg-phone.jpeg")`);
+    body.css("background-image", `url("./images/night-bg-phone.jpeg")`);
     section.css("background-color", "var(--bg-dark)");
   }
 };
