@@ -8,7 +8,7 @@ const clock = dayjs();
 const DAY_LENGTH = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 $.ajax({
-  url: `http://api.openweathermap.org/geo/1.0/direct?q=milwaukee,us&limit=50&appid=${myAPI}`,
+  url: `https://api.openweathermap.org/geo/1.0/direct?q=milwaukee,us&limit=50&appid=${myAPI}`,
   method: "GET",
 }).then(function (res) {
   const usCountries = [];
@@ -30,7 +30,7 @@ $.ajax({
 
 const getWeatherNextFiveDays = function (lat, lon, city) {
   $.ajax({
-    url: `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${myAPI}`,
+    url: `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${myAPI}`,
     method: "GET",
   }).then(function (res) {
     console.log(city);
