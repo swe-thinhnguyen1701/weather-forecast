@@ -378,6 +378,10 @@ h4 {
   display: none;
 }
 
+.menu .list-item{
+  border: 0;
+}
+
 @media screen and (min-width: 1024px) {
   .menu-toggle {
     display: none;

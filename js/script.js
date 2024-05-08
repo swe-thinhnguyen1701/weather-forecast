@@ -18,13 +18,16 @@ const WEATHER_STATUS_ICON_LENGTH = [
 let selectedCity = JSON.parse(localStorage.getItem("selectedCity"))
   ? JSON.parse(localStorage.getItem("selectedCity"))
   : {};
+let cityList = JSON.parse(localStorage.getItem("cityList"))
+  ? JSON.parse(localStorage.getItem("cityList"))
+  : [];
 
 // get the latitude and longtitude of a city
 // set country as US by DEFAULT
 // save city name, state, and country
 // this only run when new city is added
 $.ajax({
-  url: `https://api.openweathermap.org/geo/1.0/direct?q=milwaukee,wi,us&limit=50&appid=${myAPI}`,
+  url: `https://api.openweathermap.org/geo/1.0/direct?q=santa-clara,ca,us&limit=50&appid=${myAPI}`,
   method: "GET",
 }).then(function (res) {
   console.log(res);
@@ -52,6 +55,17 @@ const getTempToday = function () {
     selectedCity.huminity = res.main.humidity;
     selectedCity.weatherStatus = res.weather[0].main;
     localStorage.setItem("selectedCity", JSON.stringify(selectedCity));
+    const isCityExisted = cityList.find(function(city) {
+        if(city.cityName == selectedCity.cityName && city.state == selectedCity.state){
+            return true;
+        }
+        return false;
+    });
+    if(!isCityExisted){
+        cityList.push(selectedCity);
+        localStorage.setItem("cityList", JSON.stringify(cityList));
+    }
+    
     console.log(res);
   });
 };
@@ -154,9 +168,7 @@ const displayTempNextHours = function (data) {
       weatherStatus.addClass("icon mt-2 mb-2");
       tempNextThreeHour.html(`${Math.ceil(selectedCity.currentTemp)}&deg;`);
     } else {
-      let nextHour = parseInt(
-        data.list[i].dt_txt.split(" ")[1].split(":")[0]
-      );
+      let nextHour = parseInt(data.list[i].dt_txt.split(" ")[1].split(":")[0]);
       weatherStatus.attr(
         "src",
         setWeatherStatusIcon(nextHour, data.list[i].weather.main)
@@ -265,6 +277,71 @@ const displayTempNextDays = function (data) {
   }
 };
 
+
+const displayCityList = function () {
+  // const rightNow = dayjs().format('MMM DD, YYYY [at] hh:mm:ss a');
+  //   timeDisplayEl.text(rightNow);
+  console.log("display city List is running");
+//   console.log(cityList);
+  const list = $("#city-list");
+  const rightNow = dayjs().format("hh:mm");
+  for (city of cityList) {
+    const item = $("<li>");
+    const container = $("<div>");
+    const label = $("<label>");
+    const input = $("<input>");
+    const cardHeader = $("<div>");
+    const cardHeaderGroup = $("<div>");
+    const cardHeaderCity = $("<h3>");
+    const cardHeaderTime = $("<p>");
+    const cardHeaderTemp = $("<h2>");
+    cardHeaderCity.text(`${city.cityName}`);
+    cardHeaderTime.text(rightNow);
+    cardHeaderTemp.html(`${city.currentTemp}&deg;`);
+    cardHeaderCity.addClass("card__city fw-bold")
+    cardHeaderTime.addClass("list-item__city-time fw-bold")
+    cardHeaderTemp.addClass("card__current-temp");
+    cardHeaderGroup.append(cardHeaderCity);
+    cardHeaderGroup.append(cardHeaderTime);
+    cardHeader.addClass("d-flex-row justify-content-between align-items-center mb-2");
+    cardHeader.append(cardHeaderGroup);
+    cardHeader.append(cardHeaderTemp);
+
+    const cardBody = $("<div>");
+    const tempStatus = $("<p>");
+    const tempMinMax = $("<div>");
+    const tempMin = $("<p>");
+    const tempMax = $("<p>");
+    tempStatus.text(`${city.weatherStatus}`);
+    tempMin.html(`${city.tempMin}&deg;`);
+    tempMax.html(`${city.tempMax}&deg;`);
+    tempMinMax.addClass("d-flex-row justify-content-between card__weather-min-max");
+    tempMinMax.append(tempMax);
+    tempMinMax.append(tempMin);
+    cardBody.addClass("d-flex-row justify-content-between align-items-end fw-bold");
+    cardBody.append(tempStatus);
+    cardBody.append(tempMinMax);
+
+    label.attr("for", `${city.cityName}`);
+    label.append(cardHeader);
+    label.append(cardBody);
+    input.addClass("hidden-radio");
+    input.attr("type", "radio");
+    input.attr("name", `${city.cityName}`);
+    input.attr("id", `${city.cityName}`);
+
+    container.addClass("card");
+    container.append(label);
+    container.append(input);
+
+    item.addClass("list-item");
+    item.append(container);
+
+    console.log(tempMin);
+    list.append(item);
+  }
+};
+
 const convertToAmPm = function (hour) {
   if (hour == 0) return "12AM";
   if (hour == 12) return "12PM";
@@ -337,9 +414,16 @@ const setWeatherStatusIcon = function (hour, weatherStatus) {
       return `./images/${WEATHER_STATUS_ICON_LENGTH[1]}`;
     return `./images/${WEATHER_STATUS_ICON_LENGTH[2]}`;
   }
-  if(hour > 4 && hour < 19)
-    return `./images/${WEATHER_STATUS_ICON_LENGTH[3]}`;
+  if (hour > 4 && hour < 19) return `./images/${WEATHER_STATUS_ICON_LENGTH[3]}`;
   return `./images/${WEATHER_STATUS_ICON_LENGTH[4]}`;
 };
 
+const displayTime = function (){
+    const time = dayjs().format("hh:mm:ss");
+    // console.log("TIME: ", time);
+    $(".list-item__city-time").text(time);
+}
+
 displayCurrentTemp();
+displayCityList();
+setInterval(displayTime, 1000);
