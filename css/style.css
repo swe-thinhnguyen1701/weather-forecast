@@ -1,5 +1,5 @@
 :root {
-  --bg-light: #38a4e4;
+  --bg-light: #0a71ad;
   --bg-dark: #57595b;
   --heading-color: #d6d6d6;
   --temp-color-freeze: #4397df; /* 0 deg */
@@ -108,6 +108,15 @@ h4 {
   width: 135px;
 }
 
+/* BACKGOUND COLOR */
+.bg-light-custom{
+  background-color: var(--bg-light);
+}
+
+.bg-dark-custom{
+  background-color: var(--bg-dark);
+}
+
 /* SECTION */
 .section {
   padding: 1rem 1.5rem;
@@ -115,7 +124,7 @@ h4 {
   /* border: 1px solid black;  */
   border-radius: 1.5rem;
   /* background: linear-gradient(90deg, #307cc8 0%, #94cff1 100%); */
-  background-color: var(--bg-dark);
+  /* background-color: var(--bg-dark); */
   color: white;
 }
 

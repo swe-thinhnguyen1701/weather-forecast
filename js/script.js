@@ -8,24 +8,33 @@ const TEMP_COLOR_LENGTH = [
   "var(--temp-color-warm)",
   "var(--temp-color-hot)",
 ];
-let selectedCity = JSON.parse(localStorage.getItem("selectedCity")) ? JSON.parse(localStorage.getItem("selectedCity")) : {};
+const WEATHER_STATUS_ICON_LENGTH = [
+  "Rain.png",
+  "Sunny.png",
+  "Moon.png",
+  "cloudy.png",
+  "Clouds.png",
+];
+let selectedCity = JSON.parse(localStorage.getItem("selectedCity"))
+  ? JSON.parse(localStorage.getItem("selectedCity"))
+  : {};
 
 // get the latitude and longtitude of a city
 // set country as US by DEFAULT
 // save city name, state, and country
 // this only run when new city is added
 $.ajax({
-    url: `https://api.openweathermap.org/geo/1.0/direct?q=santa-clara,ca,us&limit=50&appid=${myAPI}`,
-    method: "GET"
+  url: `https://api.openweathermap.org/geo/1.0/direct?q=milwaukee,wi,us&limit=50&appid=${myAPI}`,
+  method: "GET",
 }).then(function (res) {
-    console.log(res);
-    selectedCity.cityName = res[0].name;
-    selectedCity.state = res[0].state;
-    selectedCity.lat = res[0].lat;
-    selectedCity.lon = res[0].lon;
-    console.log(selectedCity);
-    getTempToday();
-    getTempNextFiveDays();
+  console.log(res);
+  selectedCity.cityName = res[0].name;
+  selectedCity.state = res[0].state;
+  selectedCity.lat = res[0].lat;
+  selectedCity.lon = res[0].lon;
+  console.log(selectedCity);
+  getTempToday();
+  getTempNextFiveDays();
 });
 
 // suppose I already have an object of a city
@@ -41,7 +50,7 @@ const getTempToday = function () {
     selectedCity.tempMax = Math.ceil(res.main.temp_max);
     selectedCity.tempMin = Math.ceil(res.main.temp_min);
     selectedCity.huminity = res.main.humidity;
-    selectedCity.status = res.weather[0].main;
+    selectedCity.weatherStatus = res.weather[0].main;
     localStorage.setItem("selectedCity", JSON.stringify(selectedCity));
     console.log(res);
   });
@@ -61,17 +70,18 @@ const getTempToday = function () {
 //   //   console.log(res);
 // });
 const getTempNextFiveDays = function () {
-    $.ajax({
-        url: `https://api.openweathermap.org/data/2.5/forecast?lat=${selectedCity.lat}&lon=${selectedCity.lon}&units=metric&appid=${myAPI}`,
-        medthod: "GET",
-      }).then(function (res) {
-        displayTempNextHours(res);
-        displayTempNextDays(res.list);
-        //   console.log(res);
-      });
+  $.ajax({
+    url: `https://api.openweathermap.org/data/2.5/forecast?lat=${selectedCity.lat}&lon=${selectedCity.lon}&units=metric&appid=${myAPI}`,
+    medthod: "GET",
+  }).then(function (res) {
+    displayTempNextHours(res);
+    displayTempNextDays(res.list);
+    //   console.log(res);
+  });
 };
 
 const displayCurrentTemp = function () {
+  const body = $("body");
   const currentLocation = $("#current-location");
   const cityName = $("<h3>");
   const temp = $("<h2>");
@@ -86,7 +96,7 @@ const displayCurrentTemp = function () {
   tempMinMaxContainer.addClass("d-flex-row w-1 justify-content-between");
   tempMinMaxContainer.append(tempMax);
   tempMinMaxContainer.append(tempMin);
-  tempStatus.text(selectedCity.status);
+  tempStatus.text(selectedCity.weatherStatus);
   tempDescription.addClass("d-flex-col align-items-center");
   tempDescription.append(tempStatus);
   tempDescription.append(tempMinMaxContainer);
@@ -96,11 +106,27 @@ const displayCurrentTemp = function () {
   currentLocation.append(cityName);
   currentLocation.append(temp);
   currentLocation.append(tempDescription);
+
+  const currentHour = clock.get("hour");
+  if (
+    selectedCity.weatherStatus == "Rain" ||
+    currentHour >= 19 ||
+    currentHour <= 5
+  ) {
+    if (selectedCity.weatherStatus == "Rain")
+      body.css("background-image", `url(./images/rain-bg.jpeg)`);
+    else body.css("background-image", `url(./images/night-bg.jpeg)`);
+    $(".section").addClass("bg-dark-custom");
+  } else {
+    body.css("background-image", `url(./images/sunny-bg.jpeg)`);
+    $(".section").addClass("bg-light-custom");
+  }
 };
 
 // display hourly weather
 const displayTempNextHours = function (data) {
   const weatherInNextThreeHoursList = $("#temp-in-three-hours");
+  console.log(data);
   for (let i = -1; i < 15; i++) {
     const item = $("<li>");
     const hour = $("<p>");
@@ -110,16 +136,33 @@ const displayTempNextHours = function (data) {
 
     item.addClass("list-item d-flex-col align-items-center mr-2");
     hour.addClass("hourly-forecast__time");
-    weatherStatus.attr("src", "./images/Clouds.png");
-    weatherStatus.addClass("icon mt-2 mb-2");
+
+    // get status of a weather
+    // set up icon
+    // weatherStatus.attr("src", "./images/Clouds.png");
+    // weatherStatus.addClass("icon mt-2 mb-2");
 
     if (i == -1) {
       hour.text("Now");
+      weatherStatus.attr(
+        "src",
+        setWeatherStatusIcon(
+          parseInt(clock.get("hour")),
+          selectedCity.weatherStatus
+        )
+      );
+      weatherStatus.addClass("icon mt-2 mb-2");
       tempNextThreeHour.html(`${Math.ceil(selectedCity.currentTemp)}&deg;`);
     } else {
-      const nextHour = convertToAmPm(
-        parseInt(data.list[i].dt_txt.split(" ")[1].split(":")[0])
+      let nextHour = parseInt(
+        data.list[i].dt_txt.split(" ")[1].split(":")[0]
       );
+      weatherStatus.attr(
+        "src",
+        setWeatherStatusIcon(nextHour, data.list[i].weather.main)
+      );
+      weatherStatus.addClass("icon mt-2 mb-2");
+      nextHour = convertToAmPm(nextHour);
       hour.text(`${nextHour}`);
       tempNextThreeHour.html(`${Math.ceil(data.list[i].main.temp)}&deg;`);
     }
@@ -253,17 +296,50 @@ const findTempBar = function (tempMin, tempMax) {
     }
   }
 
-  let colorBar = `linear-gradient(90deg,`;
-  for (let i = 0; i <= right - left; i++) {
-    colorBar += `${TEMP_COLOR_LENGTH[left + i]} ${(100 * i) / (right - left)}%`;
-    if (i != right - left) {
-      colorBar += ", ";
-    } else {
-      colorBar += ")";
+  let tempBar = `linear-gradient(90deg,`;
+  if (right - left != 0) {
+    for (let i = 0; i <= right - left; i++) {
+      tempBar += `${TEMP_COLOR_LENGTH[left + i]} ${
+        (100 * i) / (right - left)
+      }%`;
+      if (i != right - left) {
+        tempBar += ", ";
+      } else {
+        tempBar += ")";
+      }
     }
+    return tempBar;
   }
-  console.log(colorBar);
-  return colorBar;
+  //   console.log(tempBar + `${TEMP_COLOR_LENGTH[left]} 0%, ${TEMP_COLOR_LENGTH[left]} 100%)`);
+
+  return (
+    tempBar + `${TEMP_COLOR_LENGTH[left]} 0%, ${TEMP_COLOR_LENGTH[left]} 100%)`
+  );
+};
+
+// set icon based on weather status and current hour
+// if it is rainy -> then icon rain
+// if it is clear -> then icon based on hour
+//                  if hour from the morning to noon (5AM - 6PM) -> then set sun icon
+//                  if hour from the evening to early morning (7Pm - 4AM (next day)) -> then set icon moon.
+// if it is cloudy -> then set icon cloudy
+// 0: rain
+// 1: sunny
+// 2: moon
+// 3: cloudy (morning)
+// 4: cloudy
+const setWeatherStatusIcon = function (hour, weatherStatus) {
+  // weatherStatus.attr("src", "./images/Clouds.png");
+  if (weatherStatus == "Rain")
+    return `./images/${WEATHER_STATUS_ICON_LENGTH[0]}`;
+  if (weatherStatus == "Clear") {
+    if (hour > 4 && hour < 19)
+      return `./images/${WEATHER_STATUS_ICON_LENGTH[1]}`;
+    return `./images/${WEATHER_STATUS_ICON_LENGTH[2]}`;
+  }
+  if(hour > 4 && hour < 19)
+    return `./images/${WEATHER_STATUS_ICON_LENGTH[3]}`;
+  return `./images/${WEATHER_STATUS_ICON_LENGTH[4]}`;
 };
 
 displayCurrentTemp();
