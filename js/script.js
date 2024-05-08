@@ -313,8 +313,8 @@ const displayCityList = function () {
     const tempMin = $("<p>");
     const tempMax = $("<p>");
     tempStatus.text(`${city.weatherStatus}`);
-    tempMin.html(`${city.tempMin}&deg;`);
-    tempMax.html(`${city.tempMax}&deg;`);
+    tempMin.html(`L:${city.tempMin}&deg;`);
+    tempMax.html(`H:${city.tempMax}&deg;`);
     tempMinMax.addClass("d-flex-row justify-content-between card__weather-min-max");
     tempMinMax.append(tempMax);
     tempMinMax.append(tempMin);
