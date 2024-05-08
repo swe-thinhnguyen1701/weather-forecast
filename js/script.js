@@ -14,18 +14,18 @@ let selectedCity = JSON.parse(localStorage.getItem("selectedCity"));
 // set country as US by DEFAULT
 // save city name, state, and country
 // this only run when new city is added
-// $.ajax({
-//     url: `https://api.openweathermap.org/geo/1.0/direct?q=santa-clara,ca,us&limit=50&appid=${myAPI}`,
-//     method: "GET"
-// }).then(function (res) {
-//     console.log(res);
-//     selectedCity.cityName = res[0].name;
-//     selectedCity.state = res[0].state;
-//     selectedCity.lat = res[0].lat;
-//     selectedCity.lon = res[0].lon;
-//     console.log(selectedCity);
-//     getTempToday();
-// });
+$.ajax({
+    url: `https://api.openweathermap.org/geo/1.0/direct?q=santa-clara,ca,us&limit=50&appid=${myAPI}`,
+    method: "GET"
+}).then(function (res) {
+    console.log(res);
+    selectedCity.cityName = res[0].name;
+    selectedCity.state = res[0].state;
+    selectedCity.lat = res[0].lat;
+    selectedCity.lon = res[0].lon;
+    console.log(selectedCity);
+    getTempToday();
+});
 
 // suppose I already have an object of a city
 // now I can pass lat and lon of that city
