@@ -8,7 +8,7 @@ const TEMP_COLOR_LENGTH = [
   "var(--temp-color-warm)",
   "var(--temp-color-hot)",
 ];
-let selectedCity = JSON.parse(localStorage.getItem("selectedCity"));
+let selectedCity = JSON.parse(localStorage.getItem("selectedCity")) ? JSON.parse(localStorage.getItem("selectedCity")) : {};
 
 // get the latitude and longtitude of a city
 // set country as US by DEFAULT
