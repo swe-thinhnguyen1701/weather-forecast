@@ -306,7 +306,7 @@ h4 {
   }
 
   .five-days-forecast__heading {
-    width: 145px;
+    width: 140px;
   }
 
   .five-days-forecast__temp-bar {
@@ -319,10 +319,6 @@ h4 {
   /* .five-days-forecast{
     width: 35%;
   } */
-
-  .five-days-forecast__heading {
-    width: 155px;
-  }
 }
 
 /* HEADER */
@@ -345,7 +341,7 @@ h4 {
   }
 
   .menu {
-    background-color: var(--bg-dark);
+    /* background-color: var(--bg-dark); */
     opacity: 0.8;
     display: flex;
     flex-direction: column;
@@ -372,4 +368,37 @@ h4 {
   #current-location h3 {
     margin-top: 75px;
   }
+}
+
+/* DROPDOWN MENU */
+.dropdown-menu{
+  width: 300px;
+  font-size: 1.5rem;
+  border-radius: 10px;
+}
+
+.dropdown-menu li{
+  padding: 10px;
+  padding-left: 25px;
+  border-bottom: 1px solid lightgrey;
+}
+
+.dropdown-menu li:last-child{
+  border-bottom: 0;
+}
+
+.dropdown-item{
+  color: white;
+  padding: 0;
+}
+
+.dropdown-item:hover{
+  cursor: pointer;
+}
+
+.dropdown-menu .btn{
+  font-size: 1.5rem;
+}
+.dropdown-item p{
+  padding-bottom: 3px;
 }

@@ -22,10 +22,12 @@ $.ajax({
     }
   }
   // console.log(usCountries);
-  getWeatherNextFiveDays(lat, lon, res[0]);
-  getWeatherToday(lat, lon, res[0]);
-  getWeatherInNextThreeHours();
-  findNextFiveDays();
+  // getWeatherNextFiveDays(lat, lon, res[0]);
+  // getWeatherToday(lat, lon, res[0]);
+  // getWeatherInNextThreeHours();
+  const listNextFiveDays = findNextFiveDays();
+  console.log(listNextFiveDays);
+  // setFiveDaysForecast(listNextFiveDays);
 });
 
 const getWeatherNextFiveDays = function (lat, lon, city) {
@@ -157,25 +159,50 @@ const findNextFiveDays = function (){
   let currentDay = clock.day();
   let day = 0;
   let i = 0;
-  while(day < 5){
-    let nextDay = dayjs(data.list[i].dt_txt.split(" ")[0], "YYYY-MM-DD");    
-    if(nextDay > currentDay){
-      dayList.push(i);
-      currentDay = nextDay;
-      day++;
+  // console.log(dayList);
+    //  let date = dayjs((data.list[i]).dt_txt.split(" ")[0], "YYYY-MM-DD");
+    //  console.log(date.day());
+    while(day < 5){
+      // let date = (data.list[i]).dt_txt.split(" ")[0];
+      let nextDay = dayjs((data.list[i]).dt_txt.split(" ")[0], "YYYY-MM-DD");
+      nextDay = nextDay.day();
+      console.log(`today: ${currentDay}\nnextDay: ${nextDay}`);   
+      if(nextDay > currentDay){
+        dayList.push(i);
+        currentDay = nextDay;
+        console.log("i: ", i);
+        day++;
+      }
+      i++;
     }
-    i++;
-  }
 
-  console.log(dayList);
+  
   return dayList;
 }
 
 const setFiveDaysForecast = function(dayList){
   const data = JSON.parse(localStorage.getItem("weatherHourly"));
+  console.log(data);
+  const dayOfWeek = clock.day();
+  console.log(DAY_LENGTH[dayOfWeek]);
 
+  // SET TODAY
 
-  for(let i = 0; i < dayList.length; i++){
+  // SET NEXT 5 DAYS
+  // access data for the next day
+  // 
+  // for(let i = 0; i < dayList.length; i++){
+  //   let j = 0;
+  //   while(j < 8 && j + i < dayList[i + 1]){
 
-  }
+  //   }
+  // }
 }
+
+// const listNextFiveDays = findNextFiveDays();
+// console.log(listNextFiveDays);
+//   setFiveDaysForecast(listNextFiveDays);
+
+// const data = JSON.parse(localStorage.getItem("weatherHourly"));
+// let nextDay = dayjs((data.list[0]).dt_txt.split(" ")[0], "YYYY-MM-DD");
+// console.log("next day obj: ", (data.list[0]).dt_txt.split(" ")[0]);

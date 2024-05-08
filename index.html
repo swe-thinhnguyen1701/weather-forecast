@@ -20,8 +20,8 @@
           class="btn"
           type="button"
           data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasRight"
-          aria-controls="offcanvasRight"
+          data-bs-target="#offcanvasLeft"
+          aria-controls="offcanvasLeft"
         >
           <img
             src="./images/menu-icon.png"
@@ -29,23 +29,66 @@
             alt="menu icon"
           />
         </button>
-
         <div
-          class="offcanvas offcanvas-end text-bg-dark"
+          class="offcanvas offcanvas-start bg-dark"
           tabindex="-1"
-          id="offcanvasRight"
-          aria-labelledby="offcanvasRightLabel"
+          id="offcanvasLeft"
+          aria-labelledby="offcanvasLeftLabel"
         >
-          <div class="offcanvas-header align-items-center">
-            <h4 class="offcanvas-title ms-4" id="offcanvasRightLabel">
+          <div
+            class="offcanvas-header justify-content-between align-items-center"
+          >
+            <h4 class="offcanvas-title text-white ms-4" id="offcanvasLeftLabel">
               Weather
             </h4>
-            <button
-              type="button"
-              class="btn-close btn-close-white"
-              data-bs-dismiss="offcanvas"
-              aria-label="Close"
-            ></button>
+            <div class="dropdown">
+              <button
+                class="btn dropdown-toggle"
+                type="button"
+                id="setting"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <img
+                  src="./images/setting-icon.png"
+                  class="icon icon--medium"
+                  alt=""
+                />
+              </button>
+              <ul class="dropdown-menu bg-secondary">
+                <li><button class="btn dropdown-item">Edit List</button></li>
+                <li>
+                  <label
+                    for="celcius"
+                    class="d-flex-row justify-content-between dropdown-item"
+                  >
+                    <p>Celcius</p>
+                    <p>&deg;C</p>
+                  </label>
+                  <input
+                    type="radio"
+                    name="celcius"
+                    id="celciusOption"
+                    class="hidden-radio"
+                  />
+                </li>
+                <li>
+                  <label
+                    for="fahrenheit"
+                    class="d-flex-row justify-content-between dropdown-item"
+                  >
+                    <p>Fahrenheit</p>
+                    <p>&deg;F</p>
+                  </label>
+                  <input
+                    type="radio"
+                    name="fahrenheit"
+                    id="fahrenheitOption"
+                    class="hidden-radio"
+                  />
+                </li>
+              </ul>
+            </div>
           </div>
 
           <div class="offcanvas-body">
@@ -97,9 +140,63 @@
           </div>
         </div>
       </nav>
-      <div class="menu p-3">
-        <img src="./images/setting-icon.png" alt="" class="icon icon--medium mb-4">
-        <h4>WEATHER</h4>
+
+      <div class="menu bg-dark p-3">
+        <div
+            class="offcanvas-header justify-content-between align-items-center"
+          >
+            <h4 class="offcanvas-title text-white ms-4" id="offcanvasLeftLabel">
+              Weather
+            </h4>
+            <div class="dropdown">
+              <button
+                class="btn"
+                type="button"
+                id="setting"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <img
+                  src="./images/setting-icon.png"
+                  class="icon icon--medium"
+                  alt=""
+                />
+              </button>
+              <ul class="dropdown-menu bg-secondary">
+                <li><button class="btn dropdown-item">Edit List</button></li>
+                <li>
+                  <label
+                    for="celcius"
+                    class="d-flex-row justify-content-between dropdown-item"
+                  >
+                    <p>Celcius</p>
+                    <p>&deg;C</p>
+                  </label>
+                  <input
+                    type="radio"
+                    name="celcius"
+                    id="celciusOption"
+                    class="hidden-radio"
+                  />
+                </li>
+                <li>
+                  <label
+                    for="fahrenheit"
+                    class="d-flex-row justify-content-between dropdown-item"
+                  >
+                    <p>Fahrenheit</p>
+                    <p>&deg;F</p>
+                  </label>
+                  <input
+                    type="radio"
+                    name="fahrenheit"
+                    id="fahrenheitOption"
+                    class="hidden-radio"
+                  />
+                </li>
+              </ul>
+            </div>
+          </div>
         <div class="mt-4 mb-4 d-flex-row">
           <input
             type="text"
@@ -107,9 +204,7 @@
             id="search-city"
             placeholder="Enter a city name"
           />
-          <button type="button" class="btn btn-outline-light ms-4">
-            Add
-          </button>
+          <button type="button" class="btn btn-outline-light ms-4">Add</button>
         </div>
         <ul class="list">
           <li class="list-item">
@@ -148,7 +243,6 @@
       </div>
     </header>
 
-
     <main class="mb-5">
       <section id="current-location" class="d-flex-col align-items-center mb-5">
         <!-- <h3 id="current-location__city">Milwaukee</h3> -->
@@ -161,16 +255,15 @@
           </div>
         </div> -->
       </section>
-      
+
       <section class="section mb-5">
         <div class="hourly-forecast">
-          <ul id="temp-in-three-hours" class="list list--row">
-          </ul>
+          <ul id="temp-in-three-hours" class="list list--row"></ul>
         </div>
       </section>
-      
+
       <section class="section five-days-forecast">
-        <ul class="list list--col widget">
+        <ul id="forecast-daily" class="list list--col widget" >
           <li class="list-item">
             <div
               class="d-flex-row align-items-center justify-content-between five-days-forecast__heading"
@@ -187,19 +280,13 @@
             class="list-item d-flex-row justify-content-between align-items-center"
           >
             <p class="five-days-forecast__date">Today</p>
-            <img src="./images/sunny-status.png" alt="" class="icon" />
+            <img src="./images/Sunny.png" alt="" class="icon" />
             <div class="d-flex-row align-items-center">
               <p>10&deg;</p>
               <span class="five-days-forecast__temp-bar"></span>
               <p>20&deg;</p>
             </div>
           </li>
-          <li class="list-item">item3</li>
-          <li class="list-item">item4</li>
-          <li class="list-item">item4</li>
-          <li class="list-item">item4</li>
-          <li class="list-item">item4</li>
-          <li class="list-item">item4</li>
         </ul>
       </section>
     </main>
@@ -218,6 +305,6 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
-    <script src="./js/main.js"></script>
+    <script src="./js/script.js"></script>
   </body>
 </html>
