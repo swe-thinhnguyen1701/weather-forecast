@@ -25,6 +25,7 @@ $.ajax({
     selectedCity.lon = res[0].lon;
     console.log(selectedCity);
     getTempToday();
+    getTempNextFiveDays();
 });
 
 // suppose I already have an object of a city
@@ -51,21 +52,23 @@ const getTempToday = function () {
 // pass data to display temperature for every next 3 hours, display 15 items.
 // when getting data for the next 5 days, remember to pass res.list
 
-$.ajax({
-  url: `https://api.openweathermap.org/data/2.5/forecast?lat=${selectedCity.lat}&lon=${selectedCity.lon}&units=metric&appid=${myAPI}`,
-  medthod: "GET",
-}).then(function (res) {
-  displayTempNextHours(res);
-  displayTempNextDays(res.list);
-  //   console.log(res);
-});
+// $.ajax({
+//   url: `https://api.openweathermap.org/data/2.5/forecast?lat=${selectedCity.lat}&lon=${selectedCity.lon}&units=metric&appid=${myAPI}`,
+//   medthod: "GET",
+// }).then(function (res) {
+//   displayTempNextHours(res);
+//   displayTempNextDays(res.list);
+//   //   console.log(res);
+// });
 const getTempNextFiveDays = function () {
-  $.ajax({
-    url: `https://api.openweathermap.org/data/2.5/forecast?lat=${selectedCity.lat}&lon=${selectedCity.lon}&units=metric&appid=${myAPI}`,
-    medthod: "GET",
-  }).then(function (res) {
-    // console.log(res);
-  });
+    $.ajax({
+        url: `https://api.openweathermap.org/data/2.5/forecast?lat=${selectedCity.lat}&lon=${selectedCity.lon}&units=metric&appid=${myAPI}`,
+        medthod: "GET",
+      }).then(function (res) {
+        displayTempNextHours(res);
+        displayTempNextDays(res.list);
+        //   console.log(res);
+      });
 };
 
 const displayCurrentTemp = function () {
