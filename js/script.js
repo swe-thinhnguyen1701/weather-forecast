@@ -1,6 +1,13 @@
 const myAPI = "e1d378ee7a4cc65d64801b505f9bb03e";
 const clock = dayjs();
 const DAY_LENGTH = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const TEMP_COLOR_LENGTH = [
+  "var(--temp-color-freeze)",
+  "var(--temp-color-cold)",
+  "var(--temp-color-neutral)",
+  "var(--temp-color-warm)",
+  "var(--temp-color-hot)",
+];
 let selectedCity = JSON.parse(localStorage.getItem("selectedCity"));
 
 // get the latitude and longtitude of a city
@@ -8,7 +15,7 @@ let selectedCity = JSON.parse(localStorage.getItem("selectedCity"));
 // save city name, state, and country
 // this only run when new city is added
 // $.ajax({
-//     url: `https://api.openweathermap.org/geo/1.0/direct?q=milwaukee,wi,us&limit=50&appid=${myAPI}`,
+//     url: `https://api.openweathermap.org/geo/1.0/direct?q=santa-clara,ca,us&limit=50&appid=${myAPI}`,
 //     method: "GET"
 // }).then(function (res) {
 //     console.log(res);
@@ -29,9 +36,9 @@ const getTempToday = function () {
     url: `https://api.openweathermap.org/data/2.5/weather?lat=${selectedCity.lat}&lon=${selectedCity.lon}&units=metric&appid=${myAPI}`,
     method: "GET",
   }).then(function (res) {
-    selectedCity.currentTemp = res.main.temp;
-    selectedCity.tempMax = res.main.temp_max;
-    selectedCity.tempMin = res.main.temp_min;
+    selectedCity.currentTemp = Math.ceil(res.main.temp);
+    selectedCity.tempMax = Math.ceil(res.main.temp_max);
+    selectedCity.tempMin = Math.ceil(res.main.temp_min);
     selectedCity.huminity = res.main.humidity;
     selectedCity.status = res.weather[0].main;
     localStorage.setItem("selectedCity", JSON.stringify(selectedCity));
@@ -165,6 +172,8 @@ const displayTempNextDays = function (data) {
       console.log(weather);
       tempMax.html(`${weather.max}&deg;`);
       tempMin.html(`${weather.min}&deg;`);
+      tempBar.addClass(`temp-bar`);
+      tempBar.css("background", `${findTempBar(weather.min, weather.max)}`);
       tempMinMax.addClass("d-flex-row align-items-center");
       tempMinMax.append(tempMin);
       tempMinMax.append(tempBar);
@@ -215,6 +224,43 @@ const convertToAmPm = function (hour) {
   if (hour == 12) return "12PM";
   if (hour > 12) return `${hour - 12}PM`;
   return `${hour}AM`;
+};
+
+// 0: < 8
+// 1: 9 - 16
+// 2: 17 - 24
+// 3: 25 - 32
+// 4: > 32
+const findTempBar = function (tempMin, tempMax) {
+  const tempBase = [8, 16, 24, 32, 40];
+  let left = 0,
+    right = 0;
+
+  for (let i = 0; i < 4; i++) {
+    if (tempMin <= tempBase[i] || tempMin <= tempBase[i] + 2) {
+      left = i;
+      break;
+    }
+  }
+
+  for (let i = 4; i > -1; i--) {
+    if (tempMax >= tempBase[i] - 2) {
+      right = i;
+      break;
+    }
+  }
+
+  let colorBar = `linear-gradient(90deg,`;
+  for (let i = 0; i <= right - left; i++) {
+    colorBar += `${TEMP_COLOR_LENGTH[left + i]} ${(100 * i) / (right - left)}%`;
+    if (i != right - left) {
+      colorBar += ", ";
+    } else {
+      colorBar += ")";
+    }
+  }
+  console.log(colorBar);
+  return colorBar;
 };
 
 displayCurrentTemp();
