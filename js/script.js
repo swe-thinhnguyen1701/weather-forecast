@@ -15,6 +15,9 @@ const WEATHER_STATUS_ICON_LENGTH = [
   "cloudy.png",
   "Clouds.png",
 ];
+let cityOption;
+console.log(cityOption);
+
 let selectedCity = JSON.parse(localStorage.getItem("selectedCity"))
   ? JSON.parse(localStorage.getItem("selectedCity"))
   : {};
@@ -30,12 +33,12 @@ $.ajax({
   url: `https://api.openweathermap.org/geo/1.0/direct?q=santa-clara,ca,us&limit=50&appid=${myAPI}`,
   method: "GET",
 }).then(function (res) {
-  console.log(res);
+  //   console.log(res);
   selectedCity.cityName = res[0].name;
   selectedCity.state = res[0].state;
   selectedCity.lat = res[0].lat;
   selectedCity.lon = res[0].lon;
-  console.log(selectedCity);
+  //   console.log(selectedCity);
   getTempToday();
   getTempNextFiveDays();
 });
@@ -55,18 +58,21 @@ const getTempToday = function () {
     selectedCity.huminity = res.main.humidity;
     selectedCity.weatherStatus = res.weather[0].main;
     localStorage.setItem("selectedCity", JSON.stringify(selectedCity));
-    const isCityExisted = cityList.find(function(city) {
-        if(city.cityName == selectedCity.cityName && city.state == selectedCity.state){
-            return true;
-        }
-        return false;
+    const isCityExisted = cityList.find(function (city) {
+      if (
+        city.cityName == selectedCity.cityName &&
+        city.state == selectedCity.state
+      ) {
+        return true;
+      }
+      return false;
     });
-    if(!isCityExisted){
-        cityList.push(selectedCity);
-        localStorage.setItem("cityList", JSON.stringify(cityList));
+    if (!isCityExisted) {
+      cityList.push(selectedCity);
+      localStorage.setItem("cityList", JSON.stringify(cityList));
     }
-    
-    console.log(res);
+
+    // console.log(res);
   });
 };
 
@@ -135,12 +141,14 @@ const displayCurrentTemp = function () {
     body.css("background-image", `url(./images/sunny-bg.jpeg)`);
     $(".section").addClass("bg-light-custom");
   }
+  
 };
 
 // display hourly weather
 const displayTempNextHours = function (data) {
+  console.log("displayTempNextHours is running");
   const weatherInNextThreeHoursList = $("#temp-in-three-hours");
-  console.log(data);
+  //   console.log(data);
   for (let i = -1; i < 15; i++) {
     const item = $("<li>");
     const hour = $("<p>");
@@ -189,6 +197,7 @@ const displayTempNextHours = function (data) {
 
 const displayTempNextDays = function (data) {
   //   console.log(data);
+  console.log("displayTempNextDays is running");
   let currentDay = parseInt(clock.date());
   const forecastDaily = $("#forecast-daily");
 
@@ -227,7 +236,7 @@ const displayTempNextDays = function (data) {
         weather.weatherStatus[2]++;
       else weather.weatherStatus[3]++;
     } else {
-      console.log(weather);
+      //   console.log(weather);
       tempMax.html(`${weather.max}&deg;`);
       tempMin.html(`${weather.min}&deg;`);
       tempBar.addClass(`temp-bar`);
@@ -277,13 +286,79 @@ const displayTempNextDays = function (data) {
   }
 };
 
-
 const displayCityList = function () {
-  // const rightNow = dayjs().format('MMM DD, YYYY [at] hh:mm:ss a');
-  //   timeDisplayEl.text(rightNow);
-  console.log("display city List is running");
-//   console.log(cityList);
   const list = $("#city-list");
+  const menuToggleList = $("#menu-toggle__city-list");
+  const rightNow = dayjs().format("hh:mm");
+  for (city of cityList) {
+    const item = $("<li>");
+    const btn = $("<button>");
+    const container = $("<div>");
+    const label = $("<label>");
+    const input = $("<input>");
+    const cardHeader = $("<div>");
+    const cardHeaderGroup = $("<div>");
+    const cardHeaderCity = $("<h3>");
+    const cardHeaderTime = $("<p>");
+    const cardHeaderTemp = $("<h2>");
+    cardHeaderCity.text(`${city.cityName}`);
+    cardHeaderTime.text(rightNow);
+    cardHeaderTemp.html(`${city.currentTemp}&deg;`);
+    cardHeaderCity.addClass("card__city fw-bold");
+    cardHeaderTime.addClass("list-item__city-time fw-bold");
+    cardHeaderTemp.addClass("card__current-temp");
+    cardHeaderGroup.append(cardHeaderCity);
+    cardHeaderGroup.append(cardHeaderTime);
+    cardHeader.addClass(
+      "d-flex-row justify-content-between align-items-center w-100 mb-2"
+    );
+    cardHeader.append(cardHeaderGroup);
+    cardHeader.append(cardHeaderTemp);
+
+    const cardBody = $("<div>");
+    const tempStatus = $("<p>");
+    const tempMinMax = $("<div>");
+    const tempMin = $("<p>");
+    const tempMax = $("<p>");
+    tempStatus.text(`${city.weatherStatus}`);
+    tempMin.html(`L:${city.tempMin}&deg;`);
+    tempMax.html(`H:${city.tempMax}&deg;`);
+    tempMinMax.addClass(
+      "d-flex-row justify-content-between card__weather-min-max"
+    );
+    tempMinMax.append(tempMax);
+    tempMinMax.append(tempMin);
+    cardBody.addClass(
+      "d-flex-row justify-content-between align-items-end fw-bold w-100"
+    );
+    cardBody.append(tempStatus);
+    cardBody.append(tempMinMax);
+
+    btn.addClass("card");
+    btn.attr("type", "button");
+    btn.attr("id", `${city.cityName.replace(" ", "-")}`);
+    btn.attr("state", `${city.state}`);
+    btn.append(cardHeader);
+    btn.append(cardBody);
+
+    if (city.weatherStatus == "Rain")
+      btn.css("background-image", "url(./images/rain-bg.png)");
+    else {
+      if (clock.get("hour") > 5 && clock.get("hour") < 19)
+        btn.css("background-image", "url(./images/sunny-bg.jpeg");
+      else btn.css("background-image", "url(./images/night-bg-phone.jpeg");
+    }
+
+    item.addClass("list-item");
+    item.append(btn);
+
+    list.append(item);
+  }
+};
+
+const displayCityListMenuToggle = function () {
+  // const list = $("#city-list");
+  const list = $("#menu-toggle__city-list");
   const rightNow = dayjs().format("hh:mm");
   for (city of cityList) {
     const item = $("<li>");
@@ -298,12 +373,14 @@ const displayCityList = function () {
     cardHeaderCity.text(`${city.cityName}`);
     cardHeaderTime.text(rightNow);
     cardHeaderTemp.html(`${city.currentTemp}&deg;`);
-    cardHeaderCity.addClass("card__city fw-bold")
-    cardHeaderTime.addClass("list-item__city-time fw-bold")
+    cardHeaderCity.addClass("card__city fw-bold");
+    cardHeaderTime.addClass("list-item__city-time fw-bold");
     cardHeaderTemp.addClass("card__current-temp");
     cardHeaderGroup.append(cardHeaderCity);
     cardHeaderGroup.append(cardHeaderTime);
-    cardHeader.addClass("d-flex-row justify-content-between align-items-center mb-2");
+    cardHeader.addClass(
+      "d-flex-row justify-content-between align-items-center mb-2"
+    );
     cardHeader.append(cardHeaderGroup);
     cardHeader.append(cardHeaderTemp);
 
@@ -315,20 +392,24 @@ const displayCityList = function () {
     tempStatus.text(`${city.weatherStatus}`);
     tempMin.html(`L:${city.tempMin}&deg;`);
     tempMax.html(`H:${city.tempMax}&deg;`);
-    tempMinMax.addClass("d-flex-row justify-content-between card__weather-min-max");
+    tempMinMax.addClass(
+      "d-flex-row justify-content-between card__weather-min-max"
+    );
     tempMinMax.append(tempMax);
     tempMinMax.append(tempMin);
-    cardBody.addClass("d-flex-row justify-content-between align-items-end fw-bold");
+    cardBody.addClass(
+      "d-flex-row justify-content-between align-items-end fw-bold"
+    );
     cardBody.append(tempStatus);
     cardBody.append(tempMinMax);
 
-    label.attr("for", `${city.cityName}`);
+    label.attr("for", `${city.cityName.replace(" ", "-")}`);
     label.append(cardHeader);
     label.append(cardBody);
     input.addClass("hidden-radio");
     input.attr("type", "radio");
-    input.attr("name", `${city.cityName}`);
-    input.attr("id", `${city.cityName}`);
+    input.attr("name", `city`);
+    input.attr("id", `${city.cityName.replace(" ", "-")}`);
 
     container.addClass("card");
     container.append(label);
@@ -337,7 +418,7 @@ const displayCityList = function () {
     item.addClass("list-item");
     item.append(container);
 
-    console.log(tempMin);
+    // console.log(tempMin);
     list.append(item);
   }
 };
@@ -418,12 +499,33 @@ const setWeatherStatusIcon = function (hour, weatherStatus) {
   return `./images/${WEATHER_STATUS_ICON_LENGTH[4]}`;
 };
 
-const displayTime = function (){
-    const time = dayjs().format("hh:mm:ss");
-    // console.log("TIME: ", time);
-    $(".list-item__city-time").text(time);
-}
+const displayTime = function () {
+  const time = dayjs().format("hh:mm:ss");
+  // console.log("TIME: ", time);
+  $(".list-item__city-time").text(time);
+};
+
+$("#city-list").on("click", ".card", function () {
+  const cityName = $(this).attr("id");
+  const cityState = $(this).attr("state");
+  // console.log($(this).attr("state"));
+  selectedCity = cityList.find(function (city) {
+    console.log(city.cityName.replace(" ", "-"));
+    console.log($(this).attr("id"));
+    if (city.cityName.replace(" ", "-") == cityName && city.state == cityState)
+      return city;
+  });
+  // console.log(selectedCity);
+  $("#current-location").empty();
+  $("#temp-in-three-hours").empty();
+  $("#forecast-daily").empty();
+  displayCurrentTemp();
+  getTempNextFiveDays();
+  localStorage.setItem("selectedCity", JSON.stringify(selectedCity));
+  console.log("clicked");
+});
 
 displayCurrentTemp();
 displayCityList();
+displayCityListMenuToggle();
 setInterval(displayTime, 1000);
