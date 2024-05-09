@@ -141,7 +141,6 @@ const displayCurrentTemp = function () {
     body.css("background-image", `url(./images/sunny-bg.jpeg)`);
     $(".section").addClass("bg-light-custom");
   }
-  
 };
 
 // display hourly weather
@@ -288,7 +287,7 @@ const displayTempNextDays = function (data) {
 
 const displayCityList = function () {
   const list = $("#city-list");
-  const menuToggleList = $("#menu-toggle__city-list");
+//   const menuToggleList = $("#menu-toggle__city-list");
   const rightNow = dayjs().format("hh:mm");
   for (city of cityList) {
     const item = $("<li>");
@@ -358,10 +357,12 @@ const displayCityList = function () {
 
 const displayCityListMenuToggle = function () {
   // const list = $("#city-list");
+  //   const list = $("#city-list");
   const list = $("#menu-toggle__city-list");
   const rightNow = dayjs().format("hh:mm");
   for (city of cityList) {
     const item = $("<li>");
+    const btn = $("<button>");
     const container = $("<div>");
     const label = $("<label>");
     const input = $("<input>");
@@ -379,7 +380,7 @@ const displayCityListMenuToggle = function () {
     cardHeaderGroup.append(cardHeaderCity);
     cardHeaderGroup.append(cardHeaderTime);
     cardHeader.addClass(
-      "d-flex-row justify-content-between align-items-center mb-2"
+      "d-flex-row justify-content-between align-items-center w-100 mb-2"
     );
     cardHeader.append(cardHeaderGroup);
     cardHeader.append(cardHeaderTemp);
@@ -398,27 +399,30 @@ const displayCityListMenuToggle = function () {
     tempMinMax.append(tempMax);
     tempMinMax.append(tempMin);
     cardBody.addClass(
-      "d-flex-row justify-content-between align-items-end fw-bold"
+      "d-flex-row justify-content-between align-items-end fw-bold w-100"
     );
     cardBody.append(tempStatus);
     cardBody.append(tempMinMax);
 
-    label.attr("for", `${city.cityName.replace(" ", "-")}`);
-    label.append(cardHeader);
-    label.append(cardBody);
-    input.addClass("hidden-radio");
-    input.attr("type", "radio");
-    input.attr("name", `city`);
-    input.attr("id", `${city.cityName.replace(" ", "-")}`);
+    btn.addClass("card");
+    btn.attr("type", "button");
+    btn.attr("id", `${city.cityName.replace(" ", "-")}`);
+    btn.attr("state", `${city.state}`);
+    btn.attr("data-bs-dismiss", "offcanvas");
+    btn.append(cardHeader);
+    btn.append(cardBody);
 
-    container.addClass("card");
-    container.append(label);
-    container.append(input);
+    if (city.weatherStatus == "Rain")
+      btn.css("background-image", "url(./images/rain-bg.png)");
+    else {
+      if (clock.get("hour") > 5 && clock.get("hour") < 19)
+        btn.css("background-image", "url(./images/sunny-bg.jpeg");
+      else btn.css("background-image", "url(./images/night-bg-phone.jpeg");
+    }
 
     item.addClass("list-item");
-    item.append(container);
+    item.append(btn);
 
-    // console.log(tempMin);
     list.append(item);
   }
 };
@@ -523,6 +527,27 @@ $("#city-list").on("click", ".card", function () {
   getTempNextFiveDays();
   localStorage.setItem("selectedCity", JSON.stringify(selectedCity));
   console.log("clicked");
+});
+
+$("#menu-toggle__city-list").on("click", ".card", function () {
+  const cityName = $(this).attr("id");
+  const cityState = $(this).attr("state");
+  // console.log($(this).attr("state"));
+  selectedCity = cityList.find(function (city) {
+    console.log(city.cityName.replace(" ", "-"));
+    console.log($(this).attr("id"));
+    if (city.cityName.replace(" ", "-") == cityName && city.state == cityState)
+      return city;
+  });
+  // console.log(selectedCity);
+  $("#current-location").empty();
+  $("#temp-in-three-hours").empty();
+  $("#forecast-daily").empty();
+  getTempToday();
+  displayCurrentTemp();
+  getTempNextFiveDays();
+  localStorage.setItem("selectedCity", JSON.stringify(selectedCity));
+  //   console.log("clicked");
 });
 
 displayCurrentTemp();
