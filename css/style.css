@@ -455,3 +455,8 @@ h4 {
 .dropdown-item p {
   padding-bottom: 3px;
 }
+
+/* DROP DOWN SEARCH MENU*/
+.dropdown-menu-custom{
+  display: none;
+}

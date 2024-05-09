@@ -98,9 +98,14 @@
                 class="form-control"
                 id="search-city"
                 placeholder="Enter a city name"
+                autocomplete="off"
               />
-              <button type="button" class="btn btn-outline-light ms-4">
-                Add
+              <button
+                type="button"
+                class="btn btn-outline-light ms-4"
+                id="menu-toggle__search-btn"
+              >
+                Search
               </button>
             </div>
             <ul class="list" id="menu-toggle__city-list">
@@ -143,69 +148,77 @@
 
       <div class="menu bg-dark p-3">
         <div
-            class="offcanvas-header justify-content-between align-items-center"
-          >
-            <h4 class="offcanvas-title text-white ms-4" id="offcanvasLeftLabel">
-              Weather
-            </h4>
-            <div class="dropdown">
-              <button
-                class="btn"
-                type="button"
-                id="setting"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <img
-                  src="./images/setting-icon.png"
-                  class="icon icon--medium"
-                  alt=""
+          class="offcanvas-header justify-content-between align-items-center"
+        >
+          <h4 class="offcanvas-title text-white ms-4" id="offcanvasLeftLabel">
+            Weather
+          </h4>
+          <div class="dropdown">
+            <button
+              class="btn"
+              type="button"
+              id="setting"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <img
+                src="./images/setting-icon.png"
+                class="icon icon--medium"
+                alt=""
+              />
+            </button>
+            <ul class="dropdown-menu bg-secondary">
+              <li><button class="btn dropdown-item">Edit List</button></li>
+              <li>
+                <label
+                  for="celcius"
+                  class="d-flex-row justify-content-between dropdown-item"
+                >
+                  <p>Celcius</p>
+                  <p>&deg;C</p>
+                </label>
+                <input
+                  type="radio"
+                  name="celcius"
+                  id="celciusOption"
+                  class="hidden-radio"
                 />
-              </button>
-              <ul class="dropdown-menu bg-secondary">
-                <li><button class="btn dropdown-item">Edit List</button></li>
-                <li>
-                  <label
-                    for="celcius"
-                    class="d-flex-row justify-content-between dropdown-item"
-                  >
-                    <p>Celcius</p>
-                    <p>&deg;C</p>
-                  </label>
-                  <input
-                    type="radio"
-                    name="celcius"
-                    id="celciusOption"
-                    class="hidden-radio"
-                  />
-                </li>
-                <li>
-                  <label
-                    for="fahrenheit"
-                    class="d-flex-row justify-content-between dropdown-item"
-                  >
-                    <p>Fahrenheit</p>
-                    <p>&deg;F</p>
-                  </label>
-                  <input
-                    type="radio"
-                    name="fahrenheit"
-                    id="fahrenheitOption"
-                    class="hidden-radio"
-                  />
-                </li>
-              </ul>
-            </div>
+              </li>
+              <li>
+                <label
+                  for="fahrenheit"
+                  class="d-flex-row justify-content-between dropdown-item"
+                >
+                  <p>Fahrenheit</p>
+                  <p>&deg;F</p>
+                </label>
+                <input
+                  type="radio"
+                  name="fahrenheit"
+                  id="fahrenheitOption"
+                  class="hidden-radio"
+                />
+              </li>
+            </ul>
           </div>
+        </div>
         <div class="mt-4 mb-4 d-flex-row">
           <input
             type="text"
             class="form-control"
-            id="search-city"
+            id="search-city-input"
             placeholder="Enter a city name"
+            autocomplete="off"
           />
-          <button type="button" class="btn btn-outline-light ms-4">Add</button>
+          <!-- <button
+              type="button"
+              class="btn btn-outline-light ms-4"
+              id="search-btn"
+            >
+              Search
+            </button> -->
         </div>
+        <ul id="city-search-list" class="list"></ul>
         <ul class="list" id="city-list">
           <!-- <li class="list-item">
             <div class="card">
@@ -263,7 +276,7 @@
       </section>
 
       <section class="section five-days-forecast">
-        <ul id="forecast-daily" class="list list--col widget" >
+        <ul id="forecast-daily" class="list list--col widget">
           <li class="list-item">
             <div
               class="d-flex-row align-items-center justify-content-between five-days-forecast__heading"

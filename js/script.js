@@ -30,10 +30,10 @@ let cityList = JSON.parse(localStorage.getItem("cityList"))
 // save city name, state, and country
 // this only run when new city is added
 $.ajax({
-  url: `https://api.openweathermap.org/geo/1.0/direct?q=santa-clara,ca,us&limit=50&appid=${myAPI}`,
+  url: `https://api.openweathermap.org/geo/1.0/direct?q=santa-clara,us&limit=50&appid=${myAPI}`,
   method: "GET",
 }).then(function (res) {
-  //   console.log(res);
+  console.log(res);
   selectedCity.cityName = res[0].name;
   selectedCity.state = res[0].state;
   selectedCity.lat = res[0].lat;
@@ -247,12 +247,20 @@ const displayTempNextDays = function (data) {
 
       let statusIdx = 0;
       let counter = weather.weatherStatus[0];
+      console.log(weather);
       for (let i = 1; i < 4; i++) {
-        if (weather.weatherStatus[i] > counter) statusIdx = i;
+        if (weather.weatherStatus[i] > counter) {
+          counter = weather.weatherStatus[i];
+          statusIdx = i;
+        }
       }
       tempStatus.addClass("icon");
       if (statusIdx == 0) {
-        tempStatus.attr("src", "./images/Rain.png");
+        if (counter == 0) {
+          tempStatus.attr("src", "./images/Clouds.png");
+        } else {
+          tempStatus.attr("src", "./images/Rain.png");
+        }
       } else if (statusIdx == 1) {
         tempStatus.attr("src", "./images/Sunny.png");
       } else if (statusIdx == 2) {
@@ -287,7 +295,7 @@ const displayTempNextDays = function (data) {
 
 const displayCityList = function () {
   const list = $("#city-list");
-//   const menuToggleList = $("#menu-toggle__city-list");
+  //   const menuToggleList = $("#menu-toggle__city-list");
   const rightNow = dayjs().format("hh:mm");
   for (city of cityList) {
     const item = $("<li>");
@@ -304,7 +312,7 @@ const displayCityList = function () {
     cardHeaderTime.text(rightNow);
     cardHeaderTemp.html(`${city.currentTemp}&deg;`);
     cardHeaderCity.addClass("card__city fw-bold");
-    cardHeaderTime.addClass("list-item__city-time fw-bold");
+    cardHeaderTime.addClass("list-item__city-time fw-bold text-start");
     cardHeaderTemp.addClass("card__current-temp");
     cardHeaderGroup.append(cardHeaderCity);
     cardHeaderGroup.append(cardHeaderTime);
@@ -548,6 +556,38 @@ $("#menu-toggle__city-list").on("click", ".card", function () {
   getTempNextFiveDays();
   localStorage.setItem("selectedCity", JSON.stringify(selectedCity));
   //   console.log("clicked");
+});
+
+$("#search-city-input").on("keyup", function () {
+  let input = $(this).val().trim();
+  input = input.replace(" ", "-");
+  if (input.length > 2) {
+    $.ajax({
+      url: `https://api.openweathermap.org/geo/1.0/direct?q=${input},us&limit=50&appid=${myAPI}`,
+      method: "GET",
+      data: { query: input },
+      success: function (res) {
+        $("#city-search-list").empty();
+        res.forEach(function (city) {
+          const btn = $("<button>");
+        //   const cityContent = $("<p>");
+          const item = $("<li>");
+        //   cityContent.text(`${city.name}, ${city.state}`);
+          btn.addClass("btn border text-white")
+          btn.text(`ADD`);
+          item.addClass("list-item d-flex-row justify-content-between");
+          item.text(`${city.name}, ${city.state}`);
+          item.append(btn);
+          $("#city-search-list").append(item);
+        });
+      },
+      error: function (xhr, status, error) {
+        console.log("Error", error);
+      },
+    });
+  } else {
+    $("#city-search-list").empty();
+  }
 });
 
 displayCurrentTemp();
