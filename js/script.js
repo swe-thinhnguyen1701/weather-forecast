@@ -558,6 +558,11 @@ $("#menu-toggle__city-list").on("click", ".card", function () {
   //   console.log("clicked");
 });
 
+$("#city-search-list").on("click", ".add-city-btn", function (event){
+    const id = $(event.target).closest("li").attr("id");
+    console.log(id);
+});
+
 $("#search-city-input").on("keyup", function () {
   let input = $(this).val().trim();
   input = input.replace(" ", "-");
@@ -570,14 +575,17 @@ $("#search-city-input").on("keyup", function () {
         $("#city-search-list").empty();
         res.forEach(function (city) {
           const btn = $("<button>");
-        //   const cityContent = $("<p>");
           const item = $("<li>");
-        //   cityContent.text(`${city.name}, ${city.state}`);
-          btn.addClass("btn border text-white")
+
+          btn.addClass("btn border text-white add-city-btn")
           btn.text(`ADD`);
+
           item.addClass("list-item d-flex-row justify-content-between");
+          item.attr("id", `${city.name.replace(" ", "-")}`);
+          item.attr("state",`${city.state}`);
           item.text(`${city.name}, ${city.state}`);
           item.append(btn);
+
           $("#city-search-list").append(item);
         });
       },
