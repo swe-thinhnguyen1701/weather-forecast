@@ -16,7 +16,7 @@ const WEATHER_STATUS_ICON_LENGTH = [
   "Clouds.png",
 ];
 let cityOption;
-console.log(cityOption);
+// console.log(cityOption);
 
 let selectedCity = JSON.parse(localStorage.getItem("selectedCity"))
   ? JSON.parse(localStorage.getItem("selectedCity"))
@@ -29,19 +29,23 @@ let cityList = JSON.parse(localStorage.getItem("cityList"))
 // set country as US by DEFAULT
 // save city name, state, and country
 // this only run when new city is added
-$.ajax({
-  url: `https://api.openweathermap.org/geo/1.0/direct?q=santa-clara,us&limit=50&appid=${myAPI}`,
-  method: "GET",
-}).then(function (res) {
-  console.log(res);
-  selectedCity.cityName = res[0].name;
-  selectedCity.state = res[0].state;
-  selectedCity.lat = res[0].lat;
-  selectedCity.lon = res[0].lon;
-  //   console.log(selectedCity);
-  getTempToday();
-  getTempNextFiveDays();
-});
+const addNewCity = function(){
+  $.ajax({
+    url: `https://api.openweathermap.org/geo/1.0/direct?q=${selectedCity.cityName.replace(" ", "-")},${selectedCity.state},us&limit=50&appid=${myAPI}`,
+    method: "GET",
+  }).then(function (res) {
+    console.log(res);
+    selectedCity.cityName = res[0].name;
+    selectedCity.state = res[0].state;
+    selectedCity.lat = res[0].lat;
+    selectedCity.lon = res[0].lon;
+    //   console.log(selectedCity);
+    getTempToday();
+    getTempNextFiveDays();    
+    // displayCityList();
+    // displayCityListMenuToggle();
+  });
+}
 
 // suppose I already have an object of a city
 // now I can pass lat and lon of that city
@@ -59,19 +63,24 @@ const getTempToday = function () {
     selectedCity.weatherStatus = res.weather[0].main;
     localStorage.setItem("selectedCity", JSON.stringify(selectedCity));
     const isCityExisted = cityList.find(function (city) {
-      if (
-        city.cityName == selectedCity.cityName &&
-        city.state == selectedCity.state
-      ) {
+      if (city.cityName == selectedCity.cityName && city.state == selectedCity.state) {
         return true;
       }
       return false;
     });
     if (!isCityExisted) {
       cityList.push(selectedCity);
-      localStorage.setItem("cityList", JSON.stringify(cityList));
+    } else {
+      cityList = cityList.filter(function (city) {
+        if (city.cityName == selectedCity.cityName && city.state == selectedCity.state)
+          city.currentTemp = selectedCity.currentTemp;
+        return city;
+      });
     }
-
+    localStorage.setItem("cityList", JSON.stringify(cityList));
+    displayCityList();
+    displayCityListMenuToggle();
+    displayCurrentTemp();
     // console.log(res);
   });
 };
@@ -103,6 +112,7 @@ const getTempNextFiveDays = function () {
 const displayCurrentTemp = function () {
   const body = $("body");
   const currentLocation = $("#current-location");
+  currentLocation.empty();
   const cityName = $("<h3>");
   const temp = $("<h2>");
   const tempDescription = $("<div>");
@@ -199,6 +209,7 @@ const displayTempNextDays = function (data) {
   console.log("displayTempNextDays is running");
   let currentDay = parseInt(clock.date());
   const forecastDaily = $("#forecast-daily");
+  forecastDaily.empty();
 
   let isToday = true;
   // weatherStatus[0] = rain
@@ -296,13 +307,11 @@ const displayTempNextDays = function (data) {
 const displayCityList = function () {
   const list = $("#city-list");
   //   const menuToggleList = $("#menu-toggle__city-list");
+  list.empty();
   const rightNow = dayjs().format("hh:mm");
   for (city of cityList) {
     const item = $("<li>");
     const btn = $("<button>");
-    const container = $("<div>");
-    const label = $("<label>");
-    const input = $("<input>");
     const cardHeader = $("<div>");
     const cardHeaderGroup = $("<div>");
     const cardHeaderCity = $("<h3>");
@@ -367,6 +376,7 @@ const displayCityListMenuToggle = function () {
   // const list = $("#city-list");
   //   const list = $("#city-list");
   const list = $("#menu-toggle__city-list");
+  list.empty();
   const rightNow = dayjs().format("hh:mm");
   for (city of cityList) {
     const item = $("<li>");
@@ -469,9 +479,8 @@ const findTempBar = function (tempMin, tempMax) {
   let tempBar = `linear-gradient(90deg,`;
   if (right - left != 0) {
     for (let i = 0; i <= right - left; i++) {
-      tempBar += `${TEMP_COLOR_LENGTH[left + i]} ${
-        (100 * i) / (right - left)
-      }%`;
+      tempBar += `${TEMP_COLOR_LENGTH[left + i]} ${(100 * i) / (right - left)
+        }%`;
       if (i != right - left) {
         tempBar += ", ";
       } else {
@@ -558,9 +567,15 @@ $("#menu-toggle__city-list").on("click", ".card", function () {
   //   console.log("clicked");
 });
 
-$("#city-search-list").on("click", ".add-city-btn", function (event){
-    const id = $(event.target).closest("li").attr("id");
-    console.log(id);
+$("#city-search-list").on("click", ".add-city-btn", function (event) {
+  const cityName = $(event.target).closest("li").attr("id");
+  const cityState = $(event.target).closest("li").attr("state");
+  // console.log(id);
+  // console.log(cityState);
+  selectedCity.cityName = cityName;
+  selectedCity.state = cityState;
+  $("search-city-input").val("");
+  addNewCity();
 });
 
 $("#search-city-input").on("keyup", function () {
@@ -582,7 +597,7 @@ $("#search-city-input").on("keyup", function () {
 
           item.addClass("list-item d-flex-row justify-content-between");
           item.attr("id", `${city.name.replace(" ", "-")}`);
-          item.attr("state",`${city.state}`);
+          item.attr("state", `${city.state}`);
           item.text(`${city.name}, ${city.state}`);
           item.append(btn);
 
@@ -598,7 +613,15 @@ $("#search-city-input").on("keyup", function () {
   }
 });
 
-displayCurrentTemp();
-displayCityList();
-displayCityListMenuToggle();
+
+
+// displayCurrentTemp();
+// displayCityList();
+// displayCityListMenuToggle();
 setInterval(displayTime, 1000);
+addNewCity();
+
+// 05/09/2024
+// search city is available in the big screen, but it's not ready in the smaller screen. (COMPLETED)
+// when adding many cities, I cannot scroll down.
+// after adding new city, the input should be back to default.
