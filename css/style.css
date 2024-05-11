@@ -456,3 +456,8 @@ h4 {
 .dropdown-menu-custom{
   display: none;
 }
+
+/* CITY LIST */
+#city-list{
+  overflow-y: auto;
+}

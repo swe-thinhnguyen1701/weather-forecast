@@ -15,7 +15,7 @@ const WEATHER_STATUS_ICON_LENGTH = [
   "cloudy.png",
   "Clouds.png",
 ];
-let cityOption;
+// let cityOption;
 // console.log(cityOption);
 
 let selectedCity = JSON.parse(localStorage.getItem("selectedCity"))
@@ -29,58 +29,60 @@ let cityList = JSON.parse(localStorage.getItem("cityList"))
 // set country as US by DEFAULT
 // save city name, state, and country
 // this only run when new city is added
-const addNewCity = function(){
-  $.ajax({
-    url: `https://api.openweathermap.org/geo/1.0/direct?q=${selectedCity.cityName.replace(" ", "-")},${selectedCity.state},us&limit=50&appid=${myAPI}`,
-    method: "GET",
-  }).then(function (res) {
-    console.log(res);
-    selectedCity.cityName = res[0].name;
-    selectedCity.state = res[0].state;
-    selectedCity.lat = res[0].lat;
-    selectedCity.lon = res[0].lon;
-    //   console.log(selectedCity);
-    getTempToday();
-    getTempNextFiveDays();    
-    // displayCityList();
-    // displayCityListMenuToggle();
-  });
+const addNewCity = function () {
+
 }
 
 // suppose I already have an object of a city
 // now I can pass lat and lon of that city
 // store all neccessary data: temp, temp max and min, humidity and status.
 // then store this object to local storage for further action.
-const getTempToday = function () {
+const getTempToday = function (selectedCity) {
+  // const getTempToday = function () {
   $.ajax({
+    // url: `https://api.openweathermap.org/data/2.5/weather?lat=${selectedCity.lat}&lon=${selectedCity.lon}&units=metric&appid=${myAPI}`,
     url: `https://api.openweathermap.org/data/2.5/weather?lat=${selectedCity.lat}&lon=${selectedCity.lon}&units=metric&appid=${myAPI}`,
     method: "GET",
   }).then(function (res) {
+    console.log("API Response:", res);
     selectedCity.currentTemp = Math.ceil(res.main.temp);
     selectedCity.tempMax = Math.ceil(res.main.temp_max);
     selectedCity.tempMin = Math.ceil(res.main.temp_min);
     selectedCity.huminity = res.main.humidity;
     selectedCity.weatherStatus = res.weather[0].main;
     localStorage.setItem("selectedCity", JSON.stringify(selectedCity));
-    const isCityExisted = cityList.find(function (city) {
-      if (city.cityName == selectedCity.cityName && city.state == selectedCity.state) {
-        return true;
+    // console.log("Get temp is invoked");
+    let isCityExisted = false;
+    // console.log(selectedCity);
+    console.log("Updated Selected City:", selectedCity);
+    // console.log(cityList);
+    for (city of cityList) {
+      if (city.cityName === selectedCity.cityName && city.state === selectedCity.state) {
+        console.log(`compare city.cityName ${city.cityName} === selectedCity.cityName ${selectedCity.cityName}`);
+        isCityExisted = true;
+        break;
       }
-      return false;
-    });
+    }
+
     if (!isCityExisted) {
       cityList.push(selectedCity);
+      console.log(`${selectedCity.cityName} is new`);
+      console.log(cityList);
     } else {
-      cityList = cityList.filter(function (city) {
-        if (city.cityName == selectedCity.cityName && city.state == selectedCity.state)
-          city.currentTemp = selectedCity.currentTemp;
-        return city;
-      });
+      for (city of cityList) {
+        if (city.cityName == selectedCity.cityName && city.state == selectedCity.state) {
+          city.currentTemp = selectedCity.currentTemp
+          break;
+        }
+      }
     }
     localStorage.setItem("cityList", JSON.stringify(cityList));
+    console.log("Updated City List in Local Storage:", JSON.parse(localStorage.getItem("cityList")));
+    selectedCity = selectedCity;
+    displayCurrentTemp();
+    getTempNextFiveDays();
     displayCityList();
     displayCityListMenuToggle();
-    displayCurrentTemp();
     // console.log(res);
   });
 };
@@ -155,7 +157,7 @@ const displayCurrentTemp = function () {
 
 // display hourly weather
 const displayTempNextHours = function (data) {
-  console.log("displayTempNextHours is running");
+  // console.log("displayTempNextHours is running");
   const weatherInNextThreeHoursList = $("#temp-in-three-hours");
   //   console.log(data);
   for (let i = -1; i < 15; i++) {
@@ -206,7 +208,7 @@ const displayTempNextHours = function (data) {
 
 const displayTempNextDays = function (data) {
   //   console.log(data);
-  console.log("displayTempNextDays is running");
+  // console.log("displayTempNextDays is running");
   let currentDay = parseInt(clock.date());
   const forecastDaily = $("#forecast-daily");
   forecastDaily.empty();
@@ -258,7 +260,7 @@ const displayTempNextDays = function (data) {
 
       let statusIdx = 0;
       let counter = weather.weatherStatus[0];
-      console.log(weather);
+      // console.log(weather);
       for (let i = 1; i < 4; i++) {
         if (weather.weatherStatus[i] > counter) {
           counter = weather.weatherStatus[i];
@@ -530,9 +532,9 @@ $("#city-list").on("click", ".card", function () {
   const cityName = $(this).attr("id");
   const cityState = $(this).attr("state");
   // console.log($(this).attr("state"));
+  // console.log($(this).attr("id"));
   selectedCity = cityList.find(function (city) {
-    console.log(city.cityName.replace(" ", "-"));
-    console.log($(this).attr("id"));
+    // console.log(city.cityName.replace(" ", "-"));
     if (city.cityName.replace(" ", "-") == cityName && city.state == cityState)
       return city;
   });
@@ -543,7 +545,7 @@ $("#city-list").on("click", ".card", function () {
   displayCurrentTemp();
   getTempNextFiveDays();
   localStorage.setItem("selectedCity", JSON.stringify(selectedCity));
-  console.log("clicked");
+  // console.log("clicked");
 });
 
 $("#menu-toggle__city-list").on("click", ".card", function () {
@@ -560,7 +562,7 @@ $("#menu-toggle__city-list").on("click", ".card", function () {
   $("#current-location").empty();
   $("#temp-in-three-hours").empty();
   $("#forecast-daily").empty();
-  getTempToday();
+  Z();
   displayCurrentTemp();
   getTempNextFiveDays();
   localStorage.setItem("selectedCity", JSON.stringify(selectedCity));
@@ -570,12 +572,27 @@ $("#menu-toggle__city-list").on("click", ".card", function () {
 $("#city-search-list").on("click", ".add-city-btn", function (event) {
   const cityName = $(event.target).closest("li").attr("id");
   const cityState = $(event.target).closest("li").attr("state");
-  // console.log(id);
-  // console.log(cityState);
-  selectedCity.cityName = cityName;
-  selectedCity.state = cityState;
-  $("search-city-input").val("");
-  addNewCity();
+  console.log(cityName);
+  console.log(cityState);
+  // selectedCity.cityName = cityName.replace("-", " ");
+  // selectedCity.state = cityState;
+  $("#search-city-input").val("");
+  $("#city-search-list").empty();
+
+  $.ajax({
+    url: `https://api.openweathermap.org/geo/1.0/direct?q=${selectedCity.cityName.replace(" ", "-")},${selectedCity.state},us&limit=50&appid=${myAPI}`,
+    method: "GET",
+  }).then(function (res) {
+    // console.log(res);
+    const newCity = {
+      cityName: cityName.replace("-", " "),
+      state: cityState,
+      lat: res[0].lat,
+      lon: res[0].lon,
+    }
+    getTempToday(newCity);
+    getTempNextFiveDays();
+  });
 });
 
 $("#search-city-input").on("keyup", function () {
@@ -619,7 +636,11 @@ $("#search-city-input").on("keyup", function () {
 // displayCityList();
 // displayCityListMenuToggle();
 setInterval(displayTime, 1000);
-addNewCity();
+getTempToday(selectedCity);  
+// $(document).ready(function () {
+// });
+// 
+// addNewCity();
 
 // 05/09/2024
 // search city is available in the big screen, but it's not ready in the smaller screen. (COMPLETED)
