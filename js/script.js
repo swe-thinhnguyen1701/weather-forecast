@@ -25,14 +25,6 @@ let cityList = JSON.parse(localStorage.getItem("cityList"))
   ? JSON.parse(localStorage.getItem("cityList"))
   : [];
 
-// get the latitude and longtitude of a city
-// set country as US by DEFAULT
-// save city name, state, and country
-// this only run when new city is added
-const addNewCity = function () {
-
-}
-
 // suppose I already have an object of a city
 // now I can pass lat and lon of that city
 // store all neccessary data: temp, temp max and min, humidity and status.
@@ -87,19 +79,6 @@ const getTempToday = function (selectedCity) {
   });
 };
 
-// Now I want to retrieve data for the next 5 days in every 3 hours.
-// this function only works when user select a particular city, so we dont need to store data to local storage.
-// pass data to display temperature for every next 3 hours, display 15 items.
-// when getting data for the next 5 days, remember to pass res.list
-
-// $.ajax({
-//   url: `https://api.openweathermap.org/data/2.5/forecast?lat=${selectedCity.lat}&lon=${selectedCity.lon}&units=metric&appid=${myAPI}`,
-//   medthod: "GET",
-// }).then(function (res) {
-//   displayTempNextHours(res);
-//   displayTempNextDays(res.list);
-//   //   console.log(res);
-// });
 const getTempNextFiveDays = function () {
   $.ajax({
     url: `https://api.openweathermap.org/data/2.5/forecast?lat=${selectedCity.lat}&lon=${selectedCity.lon}&units=metric&appid=${myAPI}`,
@@ -159,6 +138,7 @@ const displayCurrentTemp = function () {
 const displayTempNextHours = function (data) {
   // console.log("displayTempNextHours is running");
   const weatherInNextThreeHoursList = $("#temp-in-three-hours");
+  weatherInNextThreeHoursList.empty();
   //   console.log(data);
   for (let i = -1; i < 15; i++) {
     const item = $("<li>");
@@ -360,7 +340,7 @@ const displayCityList = function () {
     btn.append(cardBody);
 
     if (city.weatherStatus == "Rain")
-      btn.css("background-image", "url(./images/rain-bg.png)");
+      btn.css("background-image", "url(./images/rain-bg.jpeg)");
     else {
       if (clock.get("hour") > 5 && clock.get("hour") < 19)
         btn.css("background-image", "url(./images/sunny-bg.jpeg");
@@ -433,7 +413,7 @@ const displayCityListMenuToggle = function () {
     btn.append(cardBody);
 
     if (city.weatherStatus == "Rain")
-      btn.css("background-image", "url(./images/rain-bg.png)");
+      btn.css("background-image", "url(./images/rain-bg.jpeg)");
     else {
       if (clock.get("hour") > 5 && clock.get("hour") < 19)
         btn.css("background-image", "url(./images/sunny-bg.jpeg");
@@ -539,9 +519,9 @@ $("#city-list").on("click", ".card", function () {
       return city;
   });
   // console.log(selectedCity);
-  $("#current-location").empty();
-  $("#temp-in-three-hours").empty();
-  $("#forecast-daily").empty();
+  // $("#current-location").empty();
+  // $("#temp-in-three-hours").empty();
+  // $("#forecast-daily").empty();
   displayCurrentTemp();
   getTempNextFiveDays();
   localStorage.setItem("selectedCity", JSON.stringify(selectedCity));
@@ -562,7 +542,6 @@ $("#menu-toggle__city-list").on("click", ".card", function () {
   $("#current-location").empty();
   $("#temp-in-three-hours").empty();
   $("#forecast-daily").empty();
-  Z();
   displayCurrentTemp();
   getTempNextFiveDays();
   localStorage.setItem("selectedCity", JSON.stringify(selectedCity));
@@ -572,15 +551,15 @@ $("#menu-toggle__city-list").on("click", ".card", function () {
 $("#city-search-list").on("click", ".add-city-btn", function (event) {
   const cityName = $(event.target).closest("li").attr("id");
   const cityState = $(event.target).closest("li").attr("state");
-  console.log(cityName);
-  console.log(cityState);
+  // console.log(cityName);
+  // console.log(cityState);
   // selectedCity.cityName = cityName.replace("-", " ");
   // selectedCity.state = cityState;
   $("#search-city-input").val("");
   $("#city-search-list").empty();
 
   $.ajax({
-    url: `https://api.openweathermap.org/geo/1.0/direct?q=${selectedCity.cityName.replace(" ", "-")},${selectedCity.state},us&limit=50&appid=${myAPI}`,
+    url: `https://api.openweathermap.org/geo/1.0/direct?q=${cityName},${cityState},us&limit=50&appid=${myAPI}`,
     method: "GET",
   }).then(function (res) {
     // console.log(res);
